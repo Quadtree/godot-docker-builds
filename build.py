@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import subprocess
-import concurrent.futures
 
 BUILDS = {
     "wasm-threads-release-3.2.4": {
@@ -68,5 +67,5 @@ def prepare_build(build_name):
 for build_name in BUILDS.keys():
     prepare_build(build_name)
 
-with concurrent.futures.ThreadPoolExecutor(8) as ex:
-    for _ in ex.map(run_build, BUILDS.keys()): pass
+for build_name in BUILDS.keys():
+    run_build(build_name)
