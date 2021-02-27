@@ -7,6 +7,3 @@ services:
       - ${OUT_DIR}:/out
     ports:
       - 8080:8080
-    command:
-      - /bin/bash
-      - /usr/local/bin/build-then-dev.sh
