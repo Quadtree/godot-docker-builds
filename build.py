@@ -53,7 +53,8 @@ def run_build(build_name):
     docker_args.append('-f')
     docker_args.append(args['_dockerfile'])
 
-    docker_args += ['--cache-from', 'ghcr.co/quadtree/godot-builder']
+    docker_args.append('--cache-from')
+    docker_args.append(','.join([get_docker_tag(it) for it in sorted(BUILDS.keys(), key=lambda it2: 0 if it2 == build_name else 1)]))
 
     docker_args.append('.')
 
