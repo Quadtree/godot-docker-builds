@@ -42,7 +42,8 @@ for build_name in BUILDS.keys():
         docker_args.append(f'{k}={v}')
 
     docker_args.append('--tag')
-    docker_args.append(f'ghcr.co/quadtree/godot-{build_name}')
+    docker_tag = f'ghcr.co/quadtree/godot-{build_name}'
+    docker_args.append(docker_tag)
 
     docker_args.append('-f')
     docker_args.append(args['_dockerfile'])
@@ -50,3 +51,5 @@ for build_name in BUILDS.keys():
     docker_args.append('.')
 
     subprocess.run(docker_args, check=True)
+
+    docker_push_args = ['docker', 'push', docker_tag]
