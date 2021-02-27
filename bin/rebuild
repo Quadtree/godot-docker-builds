@@ -1,0 +1,7 @@
+#!/bin/bash
+set -xe
+/bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /base/godot && scons -j12 p=javascript tools=no module_mono_enabled=yes mono_glue=yes copy_mono_root=yes target=release_debug mono_prefix="$HOME/mono-installs/wasm-runtime-release"'
+cp -Rv /root/mono-installs/wasm-bcl/wasm/* "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/bcl/javascript/"
+cp /base/godot/bin/godot.javascript.opt.debug.mono.zip "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/webassembly_debug.zip"
+cd /project && LD_LIBRARY_PATH='/root/mono-installs/desktop-linux-x86_64-release/lib' xvfb-run -a /base/godot/bin/godot.x11.tools.64.mono --export-debug HTML5 /tmp/html5/index.html
+cd /tmp/html5 && python3 -m http.server 8080
