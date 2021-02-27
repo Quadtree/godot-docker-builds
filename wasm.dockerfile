@@ -67,3 +67,5 @@ RUN ls /base/godot/bin
 RUN cp /base/godot/bin/godot.javascript.*mono.zip "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/${GODOT_EXPORT_TEMPLATE_NAME}.zip"
 
 ADD bin/* /usr/local/bin/
+
+CMD ["/bin/bash", "/usr/local/bin/build-then-dev.sh"]
