@@ -43,7 +43,7 @@ def run_build(build_name):
     args['BUILDKIT_INLINE_CACHE'] = 1
 
     for (k,v) in args.items():
-        if v[0] == '_': continue
+        if k[0] == '_': continue
         docker_args.append('--build-arg')
         docker_args.append(f'{k}={v}')
 
