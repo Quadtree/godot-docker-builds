@@ -68,4 +68,6 @@ RUN cp /base/godot/bin/godot.javascript.*mono.zip "/root/.local/share/godot/temp
 
 ADD bin/* /usr/local/bin/
 
+ARG EXPORT_COMMAND=--export
+ENV EXPORT_COMMAND ${EXPORT_COMMAND}
 CMD ["/bin/bash", "/usr/local/bin/build-then-dev.sh"]
