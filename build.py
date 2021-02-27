@@ -40,6 +40,8 @@ def run_build(build_name):
 
     args = get_build_config(build_name)
 
+    args['BUILDKIT_INLINE_CACHE'] = 1
+
     for (k,v) in args.items():
         if v[0] == '_': continue
         docker_args.append('--build-arg')
@@ -51,21 +53,18 @@ def run_build(build_name):
     docker_args.append('-f')
     docker_args.append(args['_dockerfile'])
 
+    docker_args += ['--cache-from', 'ghcr.co/quadtree/godot-builder']
+
     docker_args.append('.')
 
-    subprocess.run(docker_args, check=True)
+    subprocess.run(docker_args, check=True, env={
+        "DOCKER_BUILDKIT": "1",
+    })
 
     docker_push_args = ['docker', 'push', docker_tag]
 
     subprocess.run(docker_push_args, check=True)
 
-def prepare_build(build_name):
-    docker_tag = get_docker_tag(build_name)
-    docker_pull_args = ['docker', 'pull', docker_tag]
-    subprocess.run(docker_pull_args)
-
-for build_name in BUILDS.keys():
-    prepare_build(build_name)
 
 for build_name in BUILDS.keys():
     run_build(build_name)
