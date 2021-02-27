@@ -33,6 +33,10 @@ def get_build_config(build_name):
     return args
 
 def run_build(build_name):
+    docker_tag = f'ghcr.co/quadtree/godot-builder:{build_name}'
+    docker_pull_args = ['docker', 'pull', docker_tag]
+    subprocess.run(docker_pull_args)
+
     docker_args = ['docker', 'build']
 
     args = get_build_config(build_name)
@@ -43,7 +47,6 @@ def run_build(build_name):
         docker_args.append(f'{k}={v}')
 
     docker_args.append('--tag')
-    docker_tag = f'ghcr.co/quadtree/godot-builder:{build_name}'
     docker_args.append(docker_tag)
 
     docker_args.append('-f')
