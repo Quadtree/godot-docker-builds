@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import concurrent.futures
 
 BUILDS = {
     "wasm-threads-release-3.2.4": {
@@ -31,7 +32,7 @@ def get_build_config(build_name):
 
     return args
 
-for build_name in BUILDS.keys():
+def run_build(build_name):
     docker_args = ['docker', 'build']
 
     args = get_build_config(build_name)
@@ -53,3 +54,8 @@ for build_name in BUILDS.keys():
     subprocess.run(docker_args, check=True)
 
     docker_push_args = ['docker', 'push', docker_tag]
+
+    subprocess.run(docker_push_args, check=True)
+
+with concurrent.futures.ThreadPoolExecutor(8) as ex:
+    ex.map(run_build, BUILDS.keys())
