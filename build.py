@@ -32,11 +32,11 @@ def get_build_config(build_name):
 
     return args
 
-def run_build(build_name):
-    docker_tag = f'ghcr.co/quadtree/godot-builder:{build_name}'
-    docker_pull_args = ['docker', 'pull', docker_tag]
-    subprocess.run(docker_pull_args)
+def get_docker_tag(build_name):
+    return f'ghcr.co/quadtree/godot-builder:{build_name}'
 
+def run_build(build_name):
+    docker_tag = get_docker_tag(build_name)
     docker_args = ['docker', 'build']
 
     args = get_build_config(build_name)
@@ -60,5 +60,13 @@ def run_build(build_name):
 
     subprocess.run(docker_push_args, check=True)
 
+def prepare_build(build_name):
+    docker_tag = get_docker_tag(build_name)
+    docker_pull_args = ['docker', 'pull', docker_tag]
+    subprocess.run(docker_pull_args)
+
+for build_name in BUILDS.keys():
+    prepare_build(build_name)
+
 with concurrent.futures.ThreadPoolExecutor(8) as ex:
-    ex.map(run_build, BUILDS.keys())
+    for _ in ex.map(run_build, BUILDS.keys()): pass
