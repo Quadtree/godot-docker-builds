@@ -2,7 +2,7 @@
 import subprocess
 
 BUILDS = {
-    "threads-release": {
+    "wasm-threads-release-3.2.4": {
         "_dockerfile": "wasm.dockerfile",
         "GODOT_VERSION": "3.2.4.rc",
         "GODOT_TAG": "3.2",
@@ -14,7 +14,7 @@ BUILDS = {
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_release",
         "GODOT_USE_THREADS": "yes",
     },
-    "threads-debug": {
+    "wasm-threads-debug-3.2.4": {
         "_inherits": "threads-release",
         "GODOT_TARGET": "debug",
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_debug",
@@ -42,7 +42,7 @@ for build_name in BUILDS.keys():
         docker_args.append(f'{k}={v}')
 
     docker_args.append('--tag')
-    docker_tag = f'ghcr.co/quadtree/godot-{build_name}'
+    docker_tag = f'ghcr.co/quadtree/godot-builder:{build_name}'
     docker_args.append(docker_tag)
 
     docker_args.append('-f')
