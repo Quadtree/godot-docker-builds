@@ -90,7 +90,7 @@ def get_build_config(build_name):
             inherits = [BUILDS[build_name]["_inherits"]]
 
         for config in inherits:
-            for (k,v) in config:
+            for (k,v) in config.items():
                 args[k] = v
 
     for (k,v) in BUILDS[build_name].items():
