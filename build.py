@@ -3,8 +3,14 @@ import subprocess
 import os
 
 BUILDS = {
-    "wasm-3.2.4": {
+    # Platforms
+    "wasm": {
         "_dockerfile": "wasm.dockerfile",
+    },
+
+
+    # Godot Versions
+    "3.2.4": {
         "GODOT_VERSION": "3.2.4.rc",
         "GODOT_TAG": "3.2",
         "MONO_VERSION": "2020-02",
@@ -12,53 +18,66 @@ BUILDS = {
         "EMSCRIPTEN_VERSION": "2.0.6",
     },
 
+
+    # Build Attributes
     "build-type-server": {
         "BUILDER_BUILD_TYPE": "server",
     },
 
-    "threads-release": {
+    "threads": {
         "MONO_TARGET": "runtime-threads",
-        "GODOT_TARGET": "release",
-        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_release",
         "GODOT_USE_THREADS": "yes",
+    },
+
+    "no-threads": {
+        "MONO_TARGET": "runtime",
+        "GODOT_USE_THREADS": "no",
+    },
+
+    "debug": {
+        "GODOT_TARGET": "debug",
+    },
+
+    "release": {
+        "GODOT_TARGET": "release",
+    },
+
+    "threads-release": {
+        "_inherits": ["threads", "release"],
+        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_release",
     },
 
     "no-threads-release": {
-        "MONO_TARGET": "runtime",
-        "GODOT_TARGET": "release",
+        "_inherits": ["no-threads", "release"],
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
-        "GODOT_USE_THREADS": "no",
     },
 
     "threads-debug": {
-        "MONO_TARGET": "runtime-threads",
-        "GODOT_TARGET": "debug",
+        "_inherits": ["threads", "debug"],
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_debug",
-        "GODOT_USE_THREADS": "yes",
     },
 
     "no-threads-debug": {
-        "MONO_TARGET": "runtime",
-        "GODOT_TARGET": "debug",
+        "_inherits": ["no-threads", "release"],
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_debug",
-        "GODOT_USE_THREADS": "no",
     },
 
 
+    # Builds
     "wasm-threads-debug-3.2.4": {
-        "_inherits": ["wasm-3.2.4", "threads-debug"],
+        "_inherits": ["wasm", "3.2.4", "threads-debug"],
     },
 
     "wasm-release-3.2.4": {
-        "_inherits": ["wasm-3.2.4", "no-threads-release"],
+        "_inherits": ["wasm", "3.2.4", "no-threads-release"],
     },
 
     "wasm-release-server-3.2.4": {
-        "_inherits": ["wasm-3.2.4", "no-threads-release", "build-type-server"],
+        "_inherits": ["wasm", "3.2.4", "no-threads-release", "build-type-server"],
     },
 
     "wasm-threads-release-server-3.2.4": {
-        "_inherits": ["wasm-3.2.4", "threads-release", "build-type-server"],
+        "_inherits": ["wasm", "3.2.4", "threads-release", "build-type-server"],
     },
 }
 
