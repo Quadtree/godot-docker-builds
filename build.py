@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import os
 
 BUILDS = {
     "wasm-threads-release-3.2.4": {
@@ -58,13 +59,14 @@ def run_build(build_name):
 
     docker_args.append('.')
 
-    subprocess.run(docker_args, check=True, env={
-        "DOCKER_BUILDKIT": "1",
-    })
+    run_env = dict(os.environ)
+    run_env["DOCKER_BUILDKIT"] = "1"
+
+    subprocess.run(docker_args, check=True, env=run_env)
 
     docker_push_args = ['docker', 'push', docker_tag]
 
-    subprocess.run(docker_push_args, check=True)
+    subprocess.run(docker_push_args, check=True, env=run_env)
 
 
 for build_name in BUILDS.keys():
