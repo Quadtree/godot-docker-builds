@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   builder:
-    image: ${IMG}
+    image: "ghcr.io/quadtree/godot-builder:${TAG}"
+    stdin_open: true
+    tty: true
     volumes:
       - ${PRJ_DIR}:/project:ro
       - ${OUT_DIR}:/out
