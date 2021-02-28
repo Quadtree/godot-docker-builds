@@ -75,7 +75,7 @@ def run_build(build_name):
 
     docker_push_args = ['docker', 'push', docker_tag]
 
-    subprocess.run(docker_push_args, check=True, env=run_env)
+    subprocess.run(docker_push_args, check=False if 'ALLOW_PUSH_FAILURE' in os.environ and os.environ['ALLOW_PUSH_FAILURE'] == '1' else True, env=run_env)
 
 
 for build_name in BUILDS.keys():
