@@ -28,6 +28,26 @@ BUILDS = {
         "GODOT_TARGET": "debug",
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_debug",
     },
+
+    "wasm-release-3.2.4": {
+        "_inherits": "wasm-threads-release-3.2.4",
+        "MONO_TARGET": "runtime",
+        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
+        "GODOT_USE_THREADS": "no",
+    },
+
+    "wasm-release-server-3.2.4": {
+        "_inherits": "wasm-threads-release-3.2.4",
+        "MONO_TARGET": "runtime",
+        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
+        "GODOT_USE_THREADS": "no",
+        "BUILDER_BUILD_TYPE": "server",
+    },
+
+    "wasm-threads-release-server-3.2.4": {
+        "_inherits": "wasm-threads-release-3.2.4",
+        "BUILDER_BUILD_TYPE": "server",
+    },
 }
 
 def get_build_config(build_name):
