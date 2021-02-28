@@ -27,7 +27,7 @@ RUN cd /mono/godot-mono-builds && ./linux.py copy-bcl --target=x86_64 --mono-sou
 ARG GODOT_VERSION=3.2.4.rc
 ARG GODOT_TAG=3.2
 RUN cd /base/godot && git fetch && git checkout "$GODOT_TAG"
-RUN cd /base/godot && scons -j8 p=x11 tools=yes module_mono_enabled=yes mono_glue=no copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
+RUN cd /base/godot && scons -j8 p=server tools=yes module_mono_enabled=yes mono_glue=no copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
 RUN cd /base/godot && LD_LIBRARY_PATH='/root/mono-installs/desktop-linux-x86_64-release/lib' xvfb-run ./bin/godot.x11.tools.64.mono --generate-mono-glue modules/mono/glue
 
 RUN curl -L 'https://dot.net/v1/dotnet-install.sh' > /tmp/dotnet-install.sh
@@ -35,7 +35,7 @@ RUN chmod +x /tmp/dotnet-install.sh
 RUN /tmp/dotnet-install.sh -c Current
 ADD scripts/msbuild /usr/local/bin/msbuild
 
-RUN cd /base/godot && scons -j8 p=x11 tools=yes module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
+RUN cd /base/godot && scons -j8 p=server tools=yes module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
 
 
 
