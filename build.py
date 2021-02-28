@@ -3,6 +3,10 @@ import subprocess
 import os
 
 BUILDS = {
+    "very_short": {
+        "_inherits": "threads-release",
+        "_dockerfile": "very_short.dockerfile",
+    },
     "short": {
         "_inherits": "threads-release",
         "_dockerfile": "short.dockerfile",
