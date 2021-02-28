@@ -3,57 +3,76 @@ import subprocess
 import os
 
 BUILDS = {
-    "very_short": {
-        "_inherits": "wasm-threads-release-3.2.4",
-        "_dockerfile": "very_short.dockerfile",
-    },
-    "short": {
-        "_inherits": "wasm-threads-release-3.2.4",
-        "_dockerfile": "short.dockerfile",
-    },
-    "wasm-threads-release-3.2.4": {
+    "wasm-3.2.4": {
         "_dockerfile": "wasm.dockerfile",
         "GODOT_VERSION": "3.2.4.rc",
         "GODOT_TAG": "3.2",
         "MONO_VERSION": "2020-02",
         "UBUNTU_VERSION": "20.04",
         "EMSCRIPTEN_VERSION": "2.0.6",
+    },
+
+    "build-type-server": {
+        "BUILDER_BUILD_TYPE": "server",
+    },
+
+    "threads-release": {
         "MONO_TARGET": "runtime-threads",
         "GODOT_TARGET": "release",
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_release",
         "GODOT_USE_THREADS": "yes",
     },
-    "wasm-threads-debug-3.2.4": {
-        "_inherits": "wasm-threads-release-3.2.4",
+
+    "no-threads-release": {
+        "MONO_TARGET": "runtime",
+        "GODOT_TARGET": "release",
+        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
+        "GODOT_USE_THREADS": "no",
+    },
+
+    "threads-debug": {
+        "MONO_TARGET": "runtime-threads",
         "GODOT_TARGET": "debug",
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_debug",
+        "GODOT_USE_THREADS": "yes",
+    },
+
+    "no-threads-debug": {
+        "MONO_TARGET": "runtime",
+        "GODOT_TARGET": "debug",
+        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_debug",
+        "GODOT_USE_THREADS": "no",
+    },
+
+
+    "wasm-threads-debug-3.2.4": {
+        "_inherits": ["wasm-3.2.4", "threads-debug"],
     },
 
     "wasm-release-3.2.4": {
-        "_inherits": "wasm-threads-release-3.2.4",
-        "MONO_TARGET": "runtime",
-        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
-        "GODOT_USE_THREADS": "no",
+        "_inherits": ["wasm-3.2.4", "no-threads-release"],
     },
 
     "wasm-release-server-3.2.4": {
-        "_inherits": "wasm-threads-release-3.2.4",
-        "MONO_TARGET": "runtime",
-        "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_release",
-        "GODOT_USE_THREADS": "no",
-        "BUILDER_BUILD_TYPE": "server",
+        "_inherits": ["wasm-3.2.4", "no-threads-release", "build-type-server"],
     },
 
     "wasm-threads-release-server-3.2.4": {
-        "_inherits": "wasm-threads-release-3.2.4",
-        "BUILDER_BUILD_TYPE": "server",
+        "_inherits": ["wasm-3.2.4", "threads-release", "build-type-server"],
     },
 }
 
 def get_build_config(build_name):
     args = {}
     if "_inherits" in BUILDS[build_name]:
-        args = get_build_config(BUILDS[build_name]["_inherits"])
+        try:
+            inherits = [it for it in BUILDS[build_name]["_inherits"]]
+        except Exception:
+            inherits = [BUILDS[build_name]["_inherits"]]
+
+        for config in inherits:
+            for (k,v) in config:
+                args[k] = v
 
     for (k,v) in BUILDS[build_name].items():
         args[k] = v
@@ -76,6 +95,8 @@ def run_build(build_name):
         if k[0] == '_': continue
         docker_args.append('--build-arg')
         docker_args.append(f'{k}={v}')
+
+    print(f"Building with args: {args}")
 
     docker_args.append('--tag')
     docker_args.append(docker_tag)
