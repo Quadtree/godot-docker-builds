@@ -89,8 +89,8 @@ def get_build_config(build_name):
         else:
             inherits = [BUILDS[build_name]["_inherits"]]
 
-        for config in inherits:
-            for (k,v) in config.items():
+        for parent_name in inherits:
+            for (k,v) in get_build_config(parent_name).items():
                 args[k] = v
 
     for (k,v) in BUILDS[build_name].items():
