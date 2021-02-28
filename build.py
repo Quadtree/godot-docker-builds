@@ -4,11 +4,11 @@ import os
 
 BUILDS = {
     "very_short": {
-        "_inherits": "threads-release",
+        "_inherits": "wasm-threads-release-3.2.4",
         "_dockerfile": "very_short.dockerfile",
     },
     "short": {
-        "_inherits": "threads-release",
+        "_inherits": "wasm-threads-release-3.2.4",
         "_dockerfile": "short.dockerfile",
     },
     "wasm-threads-release-3.2.4": {
@@ -24,7 +24,7 @@ BUILDS = {
         "GODOT_USE_THREADS": "yes",
     },
     "wasm-threads-debug-3.2.4": {
-        "_inherits": "threads-release",
+        "_inherits": "wasm-threads-release-3.2.4",
         "GODOT_TARGET": "debug",
         "GODOT_EXPORT_TEMPLATE_NAME": "webassembly_threads_debug",
     },
