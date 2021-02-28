@@ -3,6 +3,10 @@ import subprocess
 import os
 
 BUILDS = {
+    "short": {
+        "_inherits": "threads-release",
+        "_dockerfile": "short.dockerfile",
+    },
     "wasm-threads-release-3.2.4": {
         "_dockerfile": "wasm.dockerfile",
         "GODOT_VERSION": "3.2.4.rc",
@@ -36,6 +40,7 @@ def get_docker_tag(build_name):
     return f'ghcr.io/quadtree/godot-builder:{build_name}'
 
 def run_build(build_name):
+    print(f'********** BUILDING {build_name} **********')
     docker_tag = get_docker_tag(build_name)
     docker_args = ['docker', 'build']
 
