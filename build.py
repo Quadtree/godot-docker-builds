@@ -84,9 +84,9 @@ BUILDS = {
 def get_build_config(build_name):
     args = {}
     if "_inherits" in BUILDS[build_name]:
-        try:
-            inherits = [it for it in BUILDS[build_name]["_inherits"]]
-        except Exception:
+        if type(BUILDS[build_name]["_inherits"]) == list:
+            inherits = BUILDS[build_name]["_inherits"]
+        else:
             inherits = [BUILDS[build_name]["_inherits"]]
 
         for config in inherits:
