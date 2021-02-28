@@ -35,6 +35,8 @@ RUN chmod +x /tmp/dotnet-install.sh
 RUN /tmp/dotnet-install.sh -c Current
 ADD scripts/msbuild /usr/local/bin/msbuild
 
+RUN msbuild
+
 RUN cd /base/godot && scons -j8 p=x11 tools=yes module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
 
 
