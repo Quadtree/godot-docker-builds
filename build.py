@@ -33,7 +33,7 @@ def get_build_config(build_name):
     return args
 
 def get_docker_tag(build_name):
-    return f'ghcr.co/quadtree/godot-builder:{build_name}'
+    return f'ghcr.io/quadtree/godot-builder:{build_name}'
 
 def run_build(build_name):
     docker_tag = get_docker_tag(build_name)

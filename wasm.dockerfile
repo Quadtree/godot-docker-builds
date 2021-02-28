@@ -1,8 +1,6 @@
 ARG UBUNTU_VERSION=20.04
 FROM ubuntu:$UBUNTU_VERSION
 
-RUN echo "$$PATH"
-
 RUN echo 'Acquire::http::Pipeline-Depth 0;' >> /etc/apt/apt.conf
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git python3-pip python xz-utils autoconf libtool make nano rsync pkg-config cmake python3 bison flex \
