@@ -99,7 +99,7 @@ def run_build(build_name):
 
 
 for build_name in BUILDS.keys():
-    if 'GITHUB_REF' in os.environ and os.environ['GITHUB_REF'] != build_name:
+    if 'GITHUB_REF' in os.environ and os.environ['GITHUB_REF'].replace('refs/heads/', '') != build_name:
         print(f"NOT running {build_name} on this branch, {os.environ['GITHUB_REF']}")
         continue
     run_build(build_name)
