@@ -126,7 +126,7 @@ def run_build(build_name):
         docker_args.append('-f')
         docker_args.append(args['_dockerfile'])
 
-        docker_args.append('-t')
+        docker_args.append('--target')
         docker_args.append(target)
 
         docker_args.append('--cache-from')
@@ -137,9 +137,10 @@ def run_build(build_name):
 
         docker_args.append('.')
 
+        print(docker_args)
+
         run_env = dict(os.environ)
         run_env["DOCKER_BUILDKIT"] = "1"
-        run_env["DOCKER_HOST"] = "localhost:6000"
 
         subprocess.run(docker_args, check=True, env=run_env)
 
