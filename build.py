@@ -64,20 +64,20 @@ BUILDS = {
 
 
     # Builds
-    "wasm-threads-debug-3.2.4": {
-        "_inherits": ["wasm", "3.2.4", "threads-debug"],
-    },
-
     "wasm-release-3.2.4": {
-        "_inherits": ["wasm", "3.2.4", "no-threads-release"],
-    },
-
-    "wasm-release-server-3.2.4": {
         "_inherits": ["wasm", "3.2.4", "no-threads-release", "build-type-server"],
     },
 
-    "wasm-threads-release-server-3.2.4": {
+    "wasm-threads-release-3.2.4": {
         "_inherits": ["wasm", "3.2.4", "threads-release", "build-type-server"],
+    },
+
+    "wasm-debug-3.2.4": {
+        "_inherits": ["wasm", "3.2.4", "no-threads-debug", "build-type-server"],
+    },
+
+    "wasm-threads-debug-3.2.4": {
+        "_inherits": ["wasm", "3.2.4", "threads-debug", "build-type-server"],
     },
 }
 
