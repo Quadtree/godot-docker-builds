@@ -1,0 +1,40 @@
+From a6097dab8f57026a0e7346174b840e5659db37cb Mon Sep 17 00:00:00 2001
+From: user <user>
+Date: Mon, 1 Mar 2021 02:28:53 +0000
+Subject: [PATCH] Multiprocessing
+
+---
+ wasm.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/wasm.py b/wasm.py
+index a72e5de..6a5c135 100755
+--- a/wasm.py
++++ b/wasm.py
+@@ -4,6 +4,7 @@ import os
+ import os.path
+ import runtime
+ import sys
++import multiprocessing
+ 
+ from options import *
+ from os_utils import *
+@@ -134,10 +135,12 @@ def make(opts: RuntimeOpts, product: str, target: str):
+     make_env = os.environ.copy()
+     make_env['PATH'] = emsdk_root + ':' + make_env['PATH']
+ 
+-    run_command('emmake', args=['make'] + make_args, env=make_env, name='make')
++    proc_arg = f"-j{multiprocessing.cpu_count()}"
+ 
+-    run_command('make', args=['-C', '%s/mono' % build_dir, 'install'], name='make install mono')
+-    run_command('make', args=['-C', '%s/data' % build_dir, 'install'], name='make install data')
++    run_command('emmake', args=['make', proc_arg] + make_args, env=make_env, name='make')
++
++    run_command('make', args=[proc_arg, '-C', '%s/mono' % build_dir, 'install'], name='make install mono')
++    run_command('make', args=[proc_arg, '-C', '%s/data' % build_dir, 'install'], name='make install data')
+ 
+     # Copy support headers
+ 
+-- 
+2.25.1
+

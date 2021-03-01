@@ -28,7 +28,7 @@ ARG GODOT_VERSION=3.2.4.rc
 ARG GODOT_TAG=3.2
 RUN cd /base/godot && git fetch && git checkout "$GODOT_TAG"
 ARG BUILDER_BUILD_TYPE=x11
-RUN cd /base/godot && scons -j32 "p=${BUILDER_BUILD_TYPE}" tools=yes module_mono_enabled=yes mono_glue=no copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
+RUN cd /base/godot && scons "-j`nproc`" "p=${BUILDER_BUILD_TYPE}" tools=yes module_mono_enabled=yes mono_glue=no copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
 RUN cd /base/godot && LD_LIBRARY_PATH='/root/mono-installs/desktop-linux-x86_64-release/lib' xvfb-run ./bin/godot*tools.64.mono --generate-mono-glue modules/mono/glue
 
 RUN curl -L 'https://dot.net/v1/dotnet-install.sh' > /tmp/dotnet-install.sh
@@ -36,7 +36,7 @@ RUN chmod +x /tmp/dotnet-install.sh
 RUN /tmp/dotnet-install.sh -c Current
 ADD scripts/msbuild /usr/local/bin/msbuild
 
-RUN cd /base/godot && scons -j32 "p=${BUILDER_BUILD_TYPE}" tools=yes module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
+RUN cd /base/godot && scons "-j`nproc`" "p=${BUILDER_BUILD_TYPE}" tools=yes module_mono_enabled=yes mono_glue=yes copy_mono_root=yes mono_prefix="$HOME/mono-installs/desktop-linux-x86_64-release"
 
 
 
@@ -53,12 +53,14 @@ RUN /bin/bash -c '                                   cd /mono/godot-mono-builds 
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./patch_emscripten.py                          --mono-sources=/mono/mono || true'
 ARG MONO_TARGET=runtime
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py configure   --target=${MONO_TARGET}  --mono-sources=/mono/mono'
+ADD patches/0001-Multiprocessing.patch /patches/0001-Multiprocessing.patch
+RUN cd /mono/godot-mono-builds && git apply /patches/0001-Multiprocessing.patch
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py make        --target=${MONO_TARGET}  --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./bcl.py make         --product=wasm           --mono-sources=/mono/mono'
 
 ARG GODOT_USE_THREADS=no
 ARG GODOT_TARGET=release_debug
-RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /base/godot && scons -j32 p=javascript use_lto=yes use_closure_compiler=no threads_enabled=${GODOT_USE_THREADS} tools=no module_mono_enabled=yes mono_glue=yes copy_mono_root=yes target=${GODOT_TARGET} mono_prefix="$HOME/mono-installs/wasm-${MONO_TARGET}-release"'
+RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /base/godot && scons "-j`nproc`" p=javascript use_lto=yes use_closure_compiler=no threads_enabled=${GODOT_USE_THREADS} tools=no module_mono_enabled=yes mono_glue=yes copy_mono_root=yes target=${GODOT_TARGET} mono_prefix="$HOME/mono-installs/wasm-${MONO_TARGET}-release"'
 
 RUN mkdir -p "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/bcl/javascript"
 RUN cp -Rv /root/mono-installs/wasm-bcl/wasm/* "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/bcl/javascript/"
