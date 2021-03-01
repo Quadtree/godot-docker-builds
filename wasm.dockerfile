@@ -85,11 +85,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git python3-pip python xz-
   git libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libxi-dev libxrandr-dev yasm build-essential scons libudev-dev \
   curl xvfb
 
+COPY --from=build "/root/.dotnet" "/root/.dotnet"
+COPY --from=build "/root/mono-installs" "/root/mono-installs"
 COPY --from=build "/base/godot/bin" "/base/godot/bin"
 COPY --from=build "/root/.local/share/godot" "/root/.local/share/godot"
-COPY --from=build "/root/mono-installs" "/root/mono-installs"
-
-ADD bin/* /usr/local/bin/
+COPY --from=build "/usr/local/bin" "/usr/local/bin"
 
 ARG EXPORT_COMMAND=--export
 ENV EXPORT_COMMAND ${EXPORT_COMMAND}
