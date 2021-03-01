@@ -1,5 +1,5 @@
 ARG UBUNTU_VERSION=20.04
-FROM ubuntu:$UBUNTU_VERSION
+FROM ubuntu:$UBUNTU_VERSION AS build
 
 RUN echo 'Acquire::http::Pipeline-Depth 0;' >> /etc/apt/apt.conf
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
@@ -68,6 +68,28 @@ RUN cp -Rv /root/mono-installs/wasm-bcl/wasm/* "/root/.local/share/godot/templat
 ARG GODOT_EXPORT_TEMPLATE_NAME=webassembly_debug
 RUN ls /base/godot/bin
 RUN cp /base/godot/bin/godot.javascript.*mono.zip "/root/.local/share/godot/templates/${GODOT_VERSION}.mono/${GODOT_EXPORT_TEMPLATE_NAME}.zip"
+
+ADD bin/* /usr/local/bin/
+
+ARG EXPORT_COMMAND=--export
+ENV EXPORT_COMMAND ${EXPORT_COMMAND}
+CMD ["/bin/bash", "/usr/local/bin/build-then-dev.sh"]
+
+
+
+
+
+FROM ubuntu:$UBUNTU_VERSION AS main
+
+RUN echo 'Acquire::http::Pipeline-Depth 0;' >> /etc/apt/apt.conf
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git python3-pip python xz-utils autoconf libtool make nano rsync pkg-config cmake python3 bison flex \
+  git libx11 libxcursor libxinerama libgl1-mesa libglu libasound2 libpulse libxi libxrandr yasm build-essential scons libudev \
+  curl xvfb
+
+COPY --from=main "/base/godot/bin" "/base/godot/bin"
+COPY --from=main "/root/.local/share/godot" "/root/.local/share/godot"
+COPY --from=main "/root/mono-installs" "/root/mono-installs"
 
 ADD bin/* /usr/local/bin/
 
