@@ -53,8 +53,6 @@ RUN /bin/bash -c '                                   cd /mono/godot-mono-builds 
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./patch_emscripten.py                          --mono-sources=/mono/mono || true'
 ARG MONO_TARGET=runtime
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py configure   --target=${MONO_TARGET}  --mono-sources=/mono/mono'
-ADD patches/0001-Multiprocessing.patch /patches/0001-Multiprocessing.patch
-RUN cd /mono/godot-mono-builds && git apply /patches/0001-Multiprocessing.patch
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py make        --target=${MONO_TARGET}  --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./bcl.py make         --product=wasm           --mono-sources=/mono/mono'
 
@@ -84,12 +82,12 @@ FROM ubuntu:$UBUNTU_VERSION AS main
 RUN echo 'Acquire::http::Pipeline-Depth 0;' >> /etc/apt/apt.conf
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git python3-pip python xz-utils autoconf libtool make nano rsync pkg-config cmake python3 bison flex \
-  git libx11 libxcursor libxinerama libgl1-mesa libglu libasound2 libpulse libxi libxrandr yasm build-essential scons libudev \
+  git libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libxi-dev libxrandr-dev yasm build-essential scons libudev-dev \
   curl xvfb
 
-COPY --from=main "/base/godot/bin" "/base/godot/bin"
-COPY --from=main "/root/.local/share/godot" "/root/.local/share/godot"
-COPY --from=main "/root/mono-installs" "/root/mono-installs"
+COPY --from=build "/base/godot/bin" "/base/godot/bin"
+COPY --from=build "/root/.local/share/godot" "/root/.local/share/godot"
+COPY --from=build "/root/mono-installs" "/root/mono-installs"
 
 ADD bin/* /usr/local/bin/
 
