@@ -1,0 +1,37 @@
+From 536af8e79eb420d6cda72849c4542253d621afea Mon Sep 17 00:00:00 2001
+From: Quadtree <quadtree@gmail.com>
+Date: Mon, 1 Mar 2021 20:06:44 -0800
+Subject: [PATCH] Memory optimization
+
+---
+ platform/javascript/detect.py | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/platform/javascript/detect.py b/platform/javascript/detect.py
+index a6563ff26c..ff9166898c 100644
+--- a/platform/javascript/detect.py
++++ b/platform/javascript/detect.py
+@@ -102,8 +102,6 @@ def configure(env):
+         # Don't use dynamic_cast, necessary with no-rtti.
+         env.Append(CPPDEFINES=["NO_SAFE_CAST"])
+ 
+-    env.Append(LINKFLAGS=["-s", "INITIAL_MEMORY=%sMB" % env["initial_memory"]])
+-
+     ## Copy env variables.
+     env["ENV"] = os.environ
+ 
+@@ -212,10 +210,7 @@ def configure(env):
+     # Wrap the JavaScript support code around a closure named Godot.
+     env.Append(LINKFLAGS=["-s", "MODULARIZE=1", "-s", "EXPORT_NAME='Godot'"])
+ 
+-    # Allow increasing memory buffer size during runtime. This is efficient
+-    # when using WebAssembly (in comparison to asm.js) and works well for
+-    # us since we don't know requirements at compile-time.
+-    env.Append(LINKFLAGS=["-s", "ALLOW_MEMORY_GROWTH=1"])
++    env.Append(LINKFLAGS=["-s", "INITIAL_MEMORY=512MB"])
+ 
+     # This setting just makes WebGL 2 APIs available, it does NOT disable WebGL 1.
+     env.Append(LINKFLAGS=["-s", "USE_WEBGL2=1"])
+-- 
+2.29.2
+

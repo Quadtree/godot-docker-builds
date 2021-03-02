@@ -66,6 +66,9 @@ RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds 
 ADD patches/0001-ENV-alteration.patch /patches/0001-ENV-alteration.patch
 RUN cd /base/godot && git apply /patches/0001-ENV-alteration.patch
 
+#ADD patches/0001-Memory-optimization.patch /patches/0001-Memory-optimization.patch
+#RUN cd /base/godot && git apply /patches/0001-Memory-optimization.patch
+
 ARG GODOT_USE_THREADS=no
 ARG GODOT_TARGET=release_debug
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /base/godot && scons "-j`nproc`" p=javascript use_lto=yes use_closure_compiler=no threads_enabled=${GODOT_USE_THREADS} tools=no module_mono_enabled=yes mono_glue=yes copy_mono_root=yes target=${GODOT_TARGET} mono_prefix="$HOME/mono-installs/wasm-${MONO_TARGET}-release"'

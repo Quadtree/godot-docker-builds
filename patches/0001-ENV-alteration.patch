@@ -22,7 +22,7 @@ index 2996e95a95..abca2187f8 100644
 
  int main(int argc, char *argv[]) {
 +	printf("Altering ENV!\n");
-+   char* cc = "MONO_GC_PARAMS=major=marksweep-conc";
++   char* cc = "MONO_GC_PARAMS=major=marksweep-conc,nursery-size=1m";
 +	putenv(cc);
 +	printf("Altering ENV is DONE!\n");
 +
