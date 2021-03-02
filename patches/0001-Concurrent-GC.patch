@@ -1,0 +1,25 @@
+From 292186649263077b5b3d974710ae3f93cec28c4c Mon Sep 17 00:00:00 2001
+From: Quadtree <quadtree@gmail.com>
+Date: Mon, 1 Mar 2021 17:54:22 -0800
+Subject: [PATCH] Concurrent GC
+
+---
+ wasm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/wasm.py b/wasm.py
+index a72e5de..2da48bc 100755
+--- a/wasm.py
++++ b/wasm.py
+@@ -53,7 +53,7 @@ def setup_wasm_target_template(env: dict, opts: RuntimeOpts, target: str):
+         '--disable-support-build',
+         '--disable-visibility-hidden',
+         '--enable-maintainer-mode',
+-        '--enable-minimal=ssa,com,jit,reflection_emit_save,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_marksweep_conc,sgen_split_nursery,sgen_gc_bridge,logging,remoting,shared_perfcounters,sgen_debug_helpers,soft_debug,interpreter,assert_messages,cleanup,mdb,gac',
++        '--enable-minimal=ssa,com,jit,reflection_emit_save,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_split_nursery,sgen_gc_bridge,logging,remoting,shared_perfcounters,sgen_debug_helpers,soft_debug,interpreter,assert_messages,cleanup,mdb,gac',
+         '--host=wasm32',
+         '--enable-llvm-runtime',
+         '--enable-icall-export',
+-- 
+2.29.2
+

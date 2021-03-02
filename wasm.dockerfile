@@ -49,12 +49,19 @@ RUN ~/emsdk/emsdk install $EMSCRIPTEN_VERSION
 RUN ~/emsdk/emsdk activate $EMSCRIPTEN_VERSION
 
 RUN cd /mono/mono && git reset --hard && git checkout $MONO_VERSION
+
+ADD patches/0001-Concurrent-GC.patch /patches/0001-Concurrent-GC.patch
+RUN cd /mono/godot-mono-builds && git apply /patches/0001-Concurrent-GC.patch
+
 RUN /bin/bash -c '                                   cd /mono/godot-mono-builds && ./patch_mono.py                                --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./patch_emscripten.py                          --mono-sources=/mono/mono || true'
 ARG MONO_TARGET=runtime
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py configure   --target=${MONO_TARGET}  --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./wasm.py make        --target=${MONO_TARGET}  --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./bcl.py make         --product=wasm           --mono-sources=/mono/mono'
+
+ADD patches/0001-ENV-alteration.patch /patches/0001-ENV-alteration.patch
+RUN cd /base/godot && git apply /patches/0001-ENV-alteration.patch
 
 ARG GODOT_USE_THREADS=no
 ARG GODOT_TARGET=release_debug
