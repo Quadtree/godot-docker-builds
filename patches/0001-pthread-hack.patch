@@ -1,0 +1,36 @@
+From 67bd3cee4dfbe56cc8016fd541834c91b9beeff5 Mon Sep 17 00:00:00 2001
+From: Quadtree <quadtree@gmail.com>
+Date: Mon, 1 Mar 2021 19:03:03 -0800
+Subject: [PATCH] pthread hack
+
+---
+ mono/utils/mono-threads-wasm.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/mono/utils/mono-threads-wasm.c b/mono/utils/mono-threads-wasm.c
+index e0b20fe1a8c..ec37a50b66b 100644
+--- a/mono/utils/mono-threads-wasm.c
++++ b/mono/utils/mono-threads-wasm.c
+@@ -119,7 +119,19 @@ mono_native_thread_processor_id_get (void)
+ MONO_API gboolean
+ mono_native_thread_create (MonoNativeThreadId *tid, gpointer func, gpointer arg)
+ {
++#ifdef __EMSCRIPTEN_PTHREADS__
++	printf("Warning: Risk of deadlock!\n");
++	int ret = pthread_create(tid, 0, (void *(*)(void *)) func, arg);
++	if (ret != 0){
++		printf("pthread_create failed: %d\n", ret);
++		g_assert_not_reached();
++       return 0;
++	}
++   return 1;
++#else
+ 	g_error ("WASM doesn't support threading");
++   return 0;
++#endif
+ }
+
+ static const char *thread_name;
+--
+2.29.2
+

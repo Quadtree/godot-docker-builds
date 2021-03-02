@@ -53,6 +53,9 @@ RUN cd /mono/mono && git reset --hard && git checkout $MONO_VERSION
 ADD patches/0001-Concurrent-GC.patch /patches/0001-Concurrent-GC.patch
 RUN cd /mono/godot-mono-builds && git apply /patches/0001-Concurrent-GC.patch
 
+ADD patches/0001-pthread-hack.patch /patches/0001-pthread-hack.patch
+RUN cd /mono/mono && git apply /patches/0001-pthread-hack.patch
+
 RUN /bin/bash -c '                                   cd /mono/godot-mono-builds && ./patch_mono.py                                --mono-sources=/mono/mono'
 RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds && ./patch_emscripten.py                          --mono-sources=/mono/mono || true'
 ARG MONO_TARGET=runtime
