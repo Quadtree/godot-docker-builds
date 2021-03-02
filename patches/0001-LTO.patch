@@ -1,0 +1,36 @@
+From c21b43ab532f46dd5f152cdc5a8ebcca8c4cb7c4 Mon Sep 17 00:00:00 2001
+From: Quadtree <quadtree@gmail.com>
+Date: Mon, 1 Mar 2021 20:53:57 -0800
+Subject: [PATCH] LTO
+
+---
+ wasm.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/wasm.py b/wasm.py
+index 2da48bc..7df49e6 100755
+--- a/wasm.py
++++ b/wasm.py
+@@ -39,7 +39,8 @@ def setup_wasm_target_template(env: dict, opts: RuntimeOpts, target: str):
+         env.update(extra_target_envs[target])
+ 
+     CFLAGS = ['-fexceptions']
+-    CFLAGS += ['-Os', '-g'] if opts.release else ['-O0', '-ggdb3', '-fno-omit-frame-pointer']
++    CFLAGS += ['-O3', '-g'] if opts.release else ['-O0', '-ggdb3', '-fno-omit-frame-pointer']
++    CFLAGS += ['-flto']
+     CXXFLAGS = CFLAGS + ['-s', 'DISABLE_EXCEPTION_CATCHING=0']
+ 
+     CONFIGURE_FLAGS = [
+@@ -68,7 +69,8 @@ def setup_wasm_target_template(env: dict, opts: RuntimeOpts, target: str):
+         '--cache-file=%s/wasm-%s-%s.config.cache' % (opts.configure_dir, target, opts.configuration),
+         '--prefix=%s/wasm-%s-%s' % (opts.install_dir, target, opts.configuration),
+         'CFLAGS=%s %s' % (' '.join(CFLAGS), ' '.join(env.get('wasm_%s_CFLAGS' % target, ''))),
+-        'CXXFLAGS=%s %s' % (' '.join(CXXFLAGS), ' '.join(env.get('wasm_%s_CXXFLAGS' % target, '')))
++        'CXXFLAGS=%s %s' % (' '.join(CXXFLAGS), ' '.join(env.get('wasm_%s_CXXFLAGS' % target, ''))),
++        'LDFLAGS=-flto'
+     ]
+ 
+     CONFIGURE_FLAGS += env.get('wasm_%s_CONFIGURE_FLAGS' % target, [])
+-- 
+2.29.2
+

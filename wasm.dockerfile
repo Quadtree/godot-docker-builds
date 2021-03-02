@@ -53,6 +53,9 @@ RUN cd /mono/mono && git reset --hard && git checkout $MONO_VERSION
 ADD patches/0001-Concurrent-GC.patch /patches/0001-Concurrent-GC.patch
 RUN cd /mono/godot-mono-builds && git apply /patches/0001-Concurrent-GC.patch
 
+ADD patches/0001-LTO.patch /patches/0001-LTO.patch
+RUN cd /mono/godot-mono-builds && git apply /patches/0001-LTO.patch
+
 ADD patches/0001-pthread-hack.patch /patches/0001-pthread-hack.patch
 RUN cd /mono/mono && git apply /patches/0001-pthread-hack.patch
 
@@ -65,6 +68,9 @@ RUN /bin/bash -c 'source /root/emsdk/emsdk_env.sh && cd /mono/godot-mono-builds 
 
 ADD patches/0001-ENV-alteration.patch /patches/0001-ENV-alteration.patch
 RUN cd /base/godot && git apply /patches/0001-ENV-alteration.patch
+
+ADD patches/0001-O3.patch /patches/0001-O3.patch
+RUN cd /base/godot && git apply /patches/0001-O3.patch
 
 #ADD patches/0001-Memory-optimization.patch /patches/0001-Memory-optimization.patch
 #RUN cd /base/godot && git apply /patches/0001-Memory-optimization.patch

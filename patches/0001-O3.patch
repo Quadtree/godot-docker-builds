@@ -1,0 +1,27 @@
+From 8f1e4b68e6688a1c39ec398f69c61298c9405378 Mon Sep 17 00:00:00 2001
+From: Quadtree <quadtree@gmail.com>
+Date: Mon, 1 Mar 2021 20:57:36 -0800
+Subject: [PATCH] O3
+
+---
+ platform/javascript/detect.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/platform/javascript/detect.py b/platform/javascript/detect.py
+index a6563ff26c..4d10ee0faf 100644
+--- a/platform/javascript/detect.py
++++ b/platform/javascript/detect.py
+@@ -71,8 +71,8 @@ def configure(env):
+         # -Os reduces file size by around 5 MiB over -O3. -Oz only saves about
+         # 100 KiB over -Os, which does not justify the negative impact on
+         # run-time performance.
+-        env.Append(CCFLAGS=["-Os"])
+-        env.Append(LINKFLAGS=["-Os"])
++        env.Append(CCFLAGS=["-O3"])
++        env.Append(LINKFLAGS=["-O3"])
+     elif env["target"] == "release_debug":
+         env.Append(CCFLAGS=["-Os"])
+         env.Append(LINKFLAGS=["-Os"])
+-- 
+2.29.2
+
